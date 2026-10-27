@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tabiiy dorilar</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#f6f8f7;--surf:#fff;--text:#14201a;--hint:#6a7a71;--brand:#1f8a5b;--brand2:#7bc96f;--line:#e4ebe7;--chip:#e9f2ed;--warn:#e8590c;--shadow:0 4px 18px rgba(20,60,40,.08)}
+:root.dark{--bg:#0f1512;--surf:#18211d;--text:#eaf2ee;--hint:#93a59b;--brand:#3fc088;--brand2:#7bc96f;--line:#26322c;--chip:#20302a;--shadow:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:15px/1.4 system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);padding-bottom:calc(165px + env(safe-area-inset-bottom,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surf);color:var(--text);font:inherit;outline:none}
+input:focus,textarea:focus{border-color:var(--brand)}
+.hero{margin:12px;padding:18px;border-radius:22px;color:#fff;background:linear-gradient(135deg,#137a4f,#6cc46a);position:relative;overflow:hidden}
+.hero:after{content:"🌿";position:absolute;right:-6px;bottom:-18px;font-size:92px;opacity:.25}
+.hero h1{margin:0 0 4px;font-size:20px}.hero p{margin:0;opacity:.92;font-size:13px}
+.top{position:sticky;top:0;z-index:6;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);padding:8px 12px 6px}
+.row{display:flex;gap:8px;align-items:center}
+.seg{display:flex;background:var(--chip);border-radius:12px;padding:3px}.seg button{border:0;background:none;padding:7px 11px;border-radius:9px;font-weight:600;color:var(--hint)}.seg button.on{background:var(--surf);color:var(--brand);box-shadow:var(--shadow)}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:8px 0 4px;scrollbar-width:none}
+.chips button{white-space:nowrap;padding:8px 13px;border-radius:20px;border:0;background:var(--chip);font-weight:600;font-size:13px}
+.chips button.on{background:var(--brand);color:#fff}
+.tools{display:flex;justify-content:space-between;align-items:center;padding:4px 14px}.tools select{width:auto;padding:7px 10px;font-size:13px;border-radius:10px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:8px 12px}
+.card{background:var(--surf);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;position:relative}
+.ph{height:108px;display:flex;align-items:center;justify-content:center;font-size:46px;background:linear-gradient(135deg,var(--chip),color-mix(in srgb,var(--brand2) 35%,var(--chip)))}
+.fav{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:0;background:var(--surf);box-shadow:var(--shadow);font-size:16px}
+.badge{position:absolute;top:8px;left:8px;background:var(--warn);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:10px}
+.cb{padding:10px;display:flex;flex-direction:column;gap:4px;flex:1}.cb h3{margin:0;font-size:14px;line-height:1.25}
+.star{font-size:12px;color:var(--hint)}.star b{color:#f59f00}
+.price{font-weight:800}.old{color:var(--hint);text-decoration:line-through;font-size:12px;margin-left:5px;font-weight:500}
+.add{margin-top:auto;border:0;border-radius:12px;padding:10px;background:var(--brand);color:#fff;font-weight:700}
+.qty{display:flex;align-items:center;justify-content:space-between;background:var(--chip);border-radius:12px;padding:3px}.qty button{width:36px;height:34px;border:0;border-radius:9px;background:var(--surf);font-size:18px;font-weight:700}.qty b{min-width:26px;text-align:center}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:8}
+.cta{width:100%;border:0;border-radius:16px;padding:15px;background:linear-gradient(135deg,var(--brand),#4fb36b);color:#fff;font-weight:800;font-size:16px;display:flex;justify-content:space-between;box-shadow:0 6px 18px rgba(31,138,91,.35)}
+.pad{padding:12px;display:flex;flex-direction:column;gap:11px}.pad h2{margin:0}
+.back{border:0;background:none;color:var(--brand);font-weight:700;text-align:left;padding:4px 0}
+.item{display:flex;gap:10px;align-items:center;background:var(--surf);border-radius:16px;padding:10px;box-shadow:var(--shadow)}.item .e{font-size:30px}.item .m{flex:1}.item .qty{width:112px}
+.muted{color:var(--hint);font-size:12px}.sum{display:flex;justify-content:space-between}.sum.big{font-weight:800;font-size:17px}
+.prog{background:var(--surf);border-radius:16px;padding:12px;box-shadow:var(--shadow);font-size:13px}.track{height:8px;background:var(--chip);border-radius:6px;margin-top:8px;overflow:hidden}.track i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:6px;transition:width .4s}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.opt{border:1.5px solid var(--line);background:var(--surf);border-radius:14px;padding:11px;text-align:left;font-size:13px;font-weight:600}.opt.on{border-color:var(--brand);background:var(--chip);color:var(--brand)}.opt small{display:block;font-weight:500;color:var(--hint)}
+.promo{display:flex;gap:8px}.promo button{border:0;border-radius:14px;padding:0 16px;background:var(--text);color:var(--bg);font-weight:700}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;display:flex;align-items:flex-end}
+.sheet{background:var(--surf);width:100%;border-radius:26px 26px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px));max-height:88%;overflow:auto;animation:up .25s}
+@keyframes up{from{transform:translateY(60%);opacity:.4}}
+.sheet .big{font-size:60px;text-align:center;background:var(--chip);border-radius:20px;padding:14px}
+.sheet h3{margin:12px 0 2px;font-size:13px;color:var(--brand)}.sheet p{margin:0;font-size:14px}
+.toast{position:fixed;left:50%;bottom:calc(175px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 16px;border-radius:20px;font-size:13px;z-index:30;animation:up .2s}
+.contact{display:flex;gap:8px}.contact a{flex:1;text-align:center;padding:11px;border-radius:14px;background:var(--chip);color:var(--brand);font-weight:700;text-decoration:none;font-size:13px}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--surf);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:9}
+.tabs button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;color:var(--hint);position:relative;padding:4px}
+.tabs button span{font-size:20px}.tabs button.on{color:var(--brand);font-weight:700}
+.tabs i{position:absolute;top:0;right:24%;background:var(--warn);color:#fff;font-style:normal;font-size:10px;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.bar.up{bottom:calc(58px + env(safe-area-inset-bottom,0px));padding-bottom:10px}
+.promos{display:flex;gap:10px;overflow-x:auto;padding:0 12px 6px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.promos div{flex:0 0 74%;scroll-snap-align:start;border-radius:18px;padding:14px;background:var(--surf);box-shadow:var(--shadow);font-weight:700}
+.promos small{display:block;color:var(--hint);font-weight:500}
+details{background:var(--surf);border-radius:14px;padding:12px;box-shadow:var(--shadow)}summary{font-weight:700;cursor:pointer}details p{margin:8px 0 0;font-size:14px;color:var(--hint)}
+.pi{width:100%;height:100%;object-fit:cover}.big .pi{height:auto;max-height:240px;border-radius:14px;display:block;margin:auto}
+.item .e{width:46px;height:46px;display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden;border-radius:10px}
+.card.oos .ph,.card.oos h3{opacity:.5}.add:disabled{background:var(--line);color:var(--hint)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const tg = window.Telegram && Telegram.WebApp;
+try { if (tg) { tg.ready(); tg.expand(); } } catch (e) {}
+const store = { get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const dark = (tg && tg.colorScheme === "dark") || (!tg && matchMedia("(prefers-color-scheme:dark)").matches);
+document.documentElement.classList.toggle("dark", dark);
+const buzz = (k = "light") => { try { tg && tg.HapticFeedback.impactOccurred(k); } catch (e) {} };
+
+/* ====== SOZLAMALAR: do'kon egasi o'zgartiradi ====== */
+const SHOP = { name: "Tabiiy Dorilar", free: 300000, promo: { TABIIY10: 10 }, tg: "Madibrohimov", phone: "+998998887766", api: "" /* keyinroq Worker manzili */, sheet: "" /* Google Sheets CSV havolasi */, hours: "09:00–21:00", min: 50000, link: "https://t.me/your_bot/app" };
+const DELIVERY = { courier: { e: "🛵", uz: "Kuryer", ru: "Курьер", price: 25000, tu: "1–2 kun", tr: "1–2 дня" }, post: { e: "📦", uz: "Pochta", ru: "Почта", price: 35000, tu: "3–5 kun", tr: "3–5 дней" }, pickup: { e: "🏬", uz: "Olib ketish", ru: "Самовывоз", price: 0, tu: "Bepul", tr: "Бесплатно" } };
+const PAYMENT = { cash: { e: "💵", uz: "Naqd", ru: "Наличные" }, card: { e: "💳", uz: "Karta o'tkazma", ru: "Перевод на карту" }, click: { e: "🔵", uz: "Click", ru: "Click" }, payme: { e: "🟢", uz: "Payme", ru: "Payme" } };
+let CATS = [{ id: "all", e: "✨", uz: "Hammasi", ru: "Все" }, { id: "imm", e: "🛡️", uz: "Immunitet", ru: "Иммунитет" }, { id: "dig", e: "🍃", uz: "Hazm", ru: "Пищеварение" }, { id: "nerv", e: "🌙", uz: "Asab va uyqu", ru: "Нервы и сон" }, { id: "joint", e: "🦴", uz: "Bo'g'imlar", ru: "Суставы" }];
+/* Namunaviy mahsulotlar: haqiqiylari Excel orqali yuklanadi */
+let PRODUCTS = [
+ { id: 1, cat: "imm", e: "🌿", price: 45000, old: 55000, badge: "-18%", r: 4.8, n: 124, uz: ["Echinacea choyi", "Immunitetni qo'llab-quvvatlash uchun o'simlik choyi", "Echinacea bargi, atirgul gulbarglari", "1 choy qoshiq 200 ml issiq suvga, kuniga 1–2 marta"], ru: ["Чай эхинацеи", "Травяной чай для поддержки иммунитета", "Лист эхинацеи, лепестки розы", "1 ч. л. на 200 мл горячей воды, 1–2 раза в день"] },
+ { id: 2, cat: "imm", e: "🍯", price: 80000, badge: "HIT", r: 4.9, n: 310, uz: ["Zanjabil va asal", "Tabiiy asal va zanjabil aralashmasi", "Tabiiy asal, zanjabil ildizi", "1 osh qoshiq choyga qo'shib ichiladi"], ru: ["Имбирь с мёдом", "Натуральная смесь мёда и имбиря", "Натуральный мёд, корень имбиря", "1 ст. л. добавлять в чай"] },
+ { id: 3, cat: "dig", e: "🌱", price: 38000, r: 4.6, n: 87, uz: ["Yalpiz va arpabodiyon", "Hazmni yengillashtiruvchi yig'ma", "Yalpiz, arpabodiyon urug'i", "Ovqatdan keyin 1 stakan"], ru: ["Мята и фенхель", "Сбор для комфортного пищеварения", "Мята, семена фенхеля", "После еды по 1 стакану"] },
+ { id: 4, cat: "dig", e: "🌾", price: 52000, badge: "NEW", r: 4.7, n: 41, uz: ["Zig'ir urug'i", "Tolaga boy tabiiy mahsulot", "100% zig'ir urug'i", "Kuniga 1 osh qoshiq, suv bilan"], ru: ["Семена льна", "Натуральный продукт, богатый клетчаткой", "100% семена льна", "1 ст. л. в день, запивая водой"] },
+ { id: 5, cat: "nerv", e: "🌼", price: 42000, r: 4.8, n: 203, uz: ["Romashka choyi", "Kechqurun ichish uchun tinchlantiruvchi choy", "Romashka gullari", "Uyqudan 30 daqiqa oldin 1 stakan"], ru: ["Ромашковый чай", "Успокаивающий чай на вечер", "Цветки ромашки", "1 стакан за 30 минут до сна"] },
+ { id: 6, cat: "nerv", e: "🍃", price: 49000, old: 58000, badge: "-15%", r: 4.5, n: 66, uz: ["Melissa yig'masi", "Bo'shashtiruvchi o'simlik yig'masi", "Melissa, yalpiz, lavanda", "Kuniga 1–2 stakan"], ru: ["Сбор мелиссы", "Расслабляющий травяной сбор", "Мелисса, мята, лаванда", "1–2 стакана в день"] },
+ { id: 7, cat: "joint", e: "🧴", price: 95000, r: 4.6, n: 58, uz: ["Massaj moyi", "Tashqi foydalanish uchun o'simlik moyi", "Zaytun moyi, arnika, romashka", "Teriga massaj harakatlari bilan surting"], ru: ["Массажное масло", "Растительное масло для наружного применения", "Оливковое масло, арника, ромашка", "Втирать в кожу массажными движениями"] },
+ { id: 8, cat: "joint", e: "🌰", price: 60000, r: 4.7, n: 95, uz: ["Zardchoba kukuni", "Oshxona va ichimliklar uchun ziravor", "100% zardchoba ildizi", "Ovqat yoki iliq sutga 1/2 choy qoshiq"], ru: ["Порошок куркумы", "Пряность для кухни и напитков", "100% корень куркумы", "1/2 ч. л. в еду или тёплое молоко"] }
+];
+const T = {
+ uz: { oos: "Tugagan", load: "Yuklanmoqda...", tshop: "Do'kon", torders: "Buyurtmalar", tinfo: "Ma'lumot", noord: "Hali buyurtma yo'q", again: "Takrorlash", seen: "Ko'rilgan:", also: "Birga olinadi", share: "Do'stga ulashish", hours: "Ish vaqti", faq: "Ko'p so'raladigan savollar", minor: "Minimal buyurtma:", hi: "Salom", sub: "Tabiiy mahsulotlar, tez yetkazish", free: "300 000 so'mdan bepul yetkazish", search: "Mahsulot qidirish...", pop: "Mashhur", cheap: "Arzonroq", exp: "Qimmatroq", add: "Savatga", cart: "Savat", empty: "Savat hozircha bo'sh", back: "← Orqaga", total: "Jami", goods: "Mahsulotlar", disc: "Chegirma", ship: "Yetkazish", sum: "so'm", none: "Hech narsa topilmadi", fill: "Ism, telefon va manzil yoki joylashuvni kiriting", loc: "Joylashuvimni yuborish", locok: "Joylashuv qo'shildi ✓", lochint: "Kuryer aniq topishi uchun", locerr: "Joylashuv aniqlanmadi, manzilni yozing", comp: "Tarkibi", use: "Qo'llash", cert: "Sertifikat va ruxsatnoma ma'lumoti buyurtma bilan taqdim etiladi.", note: "Mahsulotlar dori vositasi emas, tabiiy qo'shimchalardir. Foydalanishdan oldin shifokor bilan maslahatlashing.", promo: "Promokod", apply: "Qo'llash", okp: "Promokod qo'llandi", badp: "Promokod noto'g'ri", name: "Ismingiz", phone: "Telefon (+998...)", addr: "Manzil", cmt: "Izoh (ixtiyoriy)", dl: "Yetkazish usuli", py: "To'lov usuli", order: "Buyurtma berish", checkout: "Rasmiylashtirish", left: "Bepul yetkazishgacha yana", got: "🎉 Yetkazish bepul!", fav: "Sevimlilar", added: "Savatga qo'shildi", demo: "Buyurtma tayyor xabar sifatida do'kon egasining Telegram chatiga yuboriladi", sent: "Buyurtma yuborildi!", err: "Xatolik, qayta urinib ko'ring", ask: "Savol bormi?", write: "Yozish", call: "Qo'ng'iroq" },
+ ru: { oos: "Нет в наличии", load: "Загрузка...", tshop: "Магазин", torders: "Заказы", tinfo: "Инфо", noord: "Заказов пока нет", again: "Повторить", seen: "Просмотрено:", also: "Часто берут вместе", share: "Поделиться", hours: "Часы работы", faq: "Частые вопросы", minor: "Минимальный заказ:", hi: "Привет", sub: "Натуральные товары, быстрая доставка", free: "Бесплатная доставка от 300 000 сум", search: "Поиск товара...", pop: "Популярные", cheap: "Дешевле", exp: "Дороже", add: "В корзину", cart: "Корзина", empty: "Корзина пока пуста", back: "← Назад", total: "Итого", goods: "Товары", disc: "Скидка", ship: "Доставка", sum: "сум", none: "Ничего не найдено", fill: "Укажите имя, телефон и адрес или геолокацию", loc: "Отправить мою геолокацию", locok: "Геолокация добавлена ✓", lochint: "Чтобы курьер нашёл точно", locerr: "Не удалось определить, напишите адрес", comp: "Состав", use: "Применение", cert: "Информация о сертификатах предоставляется с заказом.", note: "Товары не являются лекарственными средствами, это натуральные добавки. Перед применением проконсультируйтесь с врачом.", promo: "Промокод", apply: "Применить", okp: "Промокод применён", badp: "Неверный промокод", name: "Ваше имя", phone: "Телефон (+998...)", addr: "Адрес", cmt: "Комментарий (необязательно)", dl: "Способ доставки", py: "Способ оплаты", order: "Оформить заказ", checkout: "Оформить", left: "До бесплатной доставки ещё", got: "🎉 Доставка бесплатная!", fav: "Избранное", added: "Добавлено в корзину", demo: "Заказ откроется готовым сообщением в Telegram-чате владельца", sent: "Заказ отправлен!", err: "Ошибка, попробуйте ещё раз", ask: "Есть вопрос?", write: "Написать", call: "Позвонить" }
+};
+const tgLang = tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code;
+const S = { lang: store.get("lang", tgLang === "ru" ? "ru" : "uz"), cat: "all", q: "", sort: "pop", favOnly: false, cart: store.get("cart", {}), fav: store.get("fav", []), view: "shop", loc: null, hist: store.get("hist", []), recent: store.get("recent", []), dl: "courier", pay: "cash", code: "", pct: 0, detail: null, f: store.get("form", { name: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || "", phone: "", addr: "", cmt: "" }) };
+const $ = document.getElementById("app");
+const t = k => T[S.lang][k];
+const fmt = n => Math.round(n).toLocaleString("ru-RU").replace(/\u00a0/g, " ") + " " + t("sum");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const P = id => PRODUCTS.find(p => p.id == id);
+const count = () => Object.values(S.cart).reduce((a, b) => a + b, 0);
+const goods = () => Object.entries(S.cart).reduce((a, [id, q]) => a + P(id).price * q, 0);
+const disc = () => goods() * S.pct / 100;
+const ship = () => (!count() || goods() - disc() >= SHOP.free) ? 0 : DELIVERY[S.dl].price;
+const grand = () => goods() - disc() + (count() && goods() - disc() < SHOP.free ? DELIVERY[S.dl].price : 0);
+const save = () => { store.set("cart", S.cart); store.set("fav", S.fav); store.set("lang", S.lang); store.set("form", S.f); store.set("hist", S.hist); };
+function toast(m) { const d = document.createElement("div"); d.className = "toast"; d.textContent = m; document.body.appendChild(d); setTimeout(() => d.remove(), 1400); }
+function change(id, d) { if (d > 0 && P(id) && P(id).out) return; S.cart[id] = Math.max(0, (S.cart[id] || 0) + d); if (!S.cart[id]) delete S.cart[id]; if (d > 0) { buzz(); } save(); render(); }
+function toggleFav(id, ev) { if (ev) ev.stopPropagation(); S.fav = S.fav.includes(id) ? S.fav.filter(x => x !== id) : [...S.fav, id]; buzz(); save(); render(); }
+function go(v) { readForm(); S.view = v; S.detail = null; render(); scrollTo(0, 0); }
+function setLang(l) { readForm(); S.lang = l; save(); render(); }
+function readForm() { ["name", "phone", "addr", "cmt"].forEach(k => { const e = document.getElementById("f_" + k); if (e) S.f[k] = e.value; }); store.set("form", S.f); }
+function applyPromo() { const c = document.getElementById("pc").value.trim().toUpperCase(); if (SHOP.promo[c]) { S.code = c; S.pct = SHOP.promo[c]; toast(t("okp")); buzz("medium"); } else { S.code = ""; S.pct = 0; toast(t("badp")); } render(); }
+
+function seg() { return `<div class="seg"><button class="${S.lang === "uz" ? "on" : ""}" onclick="setLang('uz')">UZ</button><button class="${S.lang === "ru" ? "on" : ""}" onclick="setLang('ru')">RU</button></div>`; }
+function list() {
+  const q = S.q.trim().toLowerCase();
+  let l = PRODUCTS.filter(p => (S.cat === "all" || p.cat === S.cat) && (!S.favOnly || S.fav.includes(p.id)) && (!q || p.uz[0].toLowerCase().includes(q) || p.ru[0].toLowerCase().includes(q)));
+  if (S.sort === "cheap") l.sort((a, b) => a.price - b.price); else if (S.sort === "exp") l.sort((a, b) => b.price - a.price); else l.sort((a, b) => b.n - a.n);
+  if (LOADING) return `<p class="pad muted" style="text-align:center">${t("load")}</p>`;
+  if (!l.length) return `<p class="pad muted" style="text-align:center">${t("none")}</p>`;
+  return `<div class="grid">${l.map(p => { const n = S.cart[p.id] || 0; const c = p[S.lang];
+    return `<div class="card ${p.out ? "oos" : ""}" onclick="openD(${p.id})"><div class="ph">${ico(p)}</div>${p.badge ? `<span class="badge">${p.badge}</span>` : ""}<button class="fav" onclick="toggleFav(${p.id},event)">${S.fav.includes(p.id) ? "❤️" : "🤍"}</button>
+    <div class="cb"><h3>${esc(c[0])}</h3>${p.r ? `<div class="star"><b>★</b> ${p.r} · ${p.n}</div>` : ""}<div><span class="price">${fmt(p.price)}</span>${p.old ? `<span class="old">${fmt(p.old)}</span>` : ""}</div>
+    <div style="margin-top:auto" onclick="event.stopPropagation()">${n ? `<div class="qty"><button onclick="change(${p.id},-1)">−</button><b>${n}</b><button onclick="change(${p.id},1)">+</button></div>` : `${p.out ? `<button class="add" disabled style="width:100%">${t("oos")}</button>` : `<button class="add" style="width:100%" onclick="change(${p.id},1);toast(t('added'))">${t("add")}</button>`}`}</div></div></div>`; }).join("")}</div>`;
+}
+function shop() {
+  const rv = S.recent.length ? `<div class="chips" style="padding:0 12px"><span class="muted" style="align-self:center;white-space:nowrap">${t("seen")}</span>${S.recent.map(id => `<button onclick="openD(${id})">${P(id).e} ${esc(P(id)[S.lang][0])}</button>`).join("")}</div>` : "";
+  const name = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? ", " + esc(tg.initDataUnsafe.user.first_name) : "";
+  return `<div class="top"><div class="row"><input placeholder="🔍 ${t("search")}" value="${esc(S.q)}" oninput="S.q=this.value;document.getElementById('list').innerHTML=list()">${seg()}</div>
+   <div class="chips">${CATS.map(c => `<button class="${S.cat === c.id && !S.favOnly ? "on" : ""}" onclick="S.cat='${c.id}';S.favOnly=false;render()">${c.e} ${c[S.lang]}</button>`).join("")}<button class="${S.favOnly ? "on" : ""}" onclick="S.favOnly=!S.favOnly;render()">❤️ ${t("fav")}</button></div></div>
+   <div class="hero"><h1>${t("hi")}${name}! 👋</h1><p>${t("sub")}</p><p style="margin-top:6px;font-weight:700">🚚 ${t("free")}</p></div>
+   <div class="promos"><div onclick="go('cart')">🚚 ${t("free")}</div><div onclick="applyTop()">🏷 ${Object.keys(SHOP.promo)[0]} · −${Object.values(SHOP.promo)[0]}%<small>${t("promo")}</small></div><div onclick="S.sort='pop';S.cat='all';S.favOnly=false;render()">🔥 ${t("pop")}</div></div>${rv}
+   <div class="tools"><span class="muted"></span><select onchange="S.sort=this.value;document.getElementById('list').innerHTML=list()"><option value="pop" ${S.sort === "pop" ? "selected" : ""}>${t("pop")}</option><option value="cheap" ${S.sort === "cheap" ? "selected" : ""}>${t("cheap")}</option><option value="exp" ${S.sort === "exp" ? "selected" : ""}>${t("exp")}</option></select></div>
+   <div id="list">${list()}</div><p class="pad muted">${t("note")}</p>
+   <div class="pad"><b>${t("ask")}</b><div class="contact"><a href="https://t.me/${SHOP.tg}">💬 ${t("write")}</a><a href="tel:${SHOP.phone}">📞 ${t("call")}</a></div></div>
+   ${count() ? `<div class="bar up"><button class="cta" onclick="go('cart')"><span>🛒 ${t("cart")} · ${count()}</span><span>${fmt(goods())}</span></button></div>` : ""}`;
+}
+function sheet() {
+  const p = P(S.detail), c = p[S.lang], n = S.cart[p.id] || 0;
+  return `<div class="ov" onclick="S.detail=null;render()"><div class="sheet" onclick="event.stopPropagation()"><div class="big">${ico(p)}</div><h2 style="margin:12px 0 2px">${esc(c[0])}</h2>
+   ${p.r ? `<div class="star"><b>★</b> ${p.r} · ${p.n}</div>` : ""}<p style="margin-top:6px">${esc(c[1])}</p><h3>${t("comp")}</h3><p>${esc(c[2])}</p><h3>${t("use")}</h3><p>${esc(c[3])}</p><p class="muted" style="margin-top:10px">${t("cert")}</p><button class="opt" style="width:100%;margin-top:10px;text-align:center" onclick="shareP(${p.id})">📤 ${t("share")}</button>
+   <div class="row" style="margin-top:14px"><div style="flex:1"><div class="price" style="font-size:18px">${fmt(p.price)}</div>${p.old ? `<span class="old" style="margin:0">${fmt(p.old)}</span>` : ""}</div>
+   <div style="flex:1.2">${n ? `<div class="qty"><button onclick="change(${p.id},-1)">−</button><b>${n}</b><button onclick="change(${p.id},1)">+</button></div>` : p.out ? `<button class="add" disabled style="width:100%;padding:13px">${t("oos")}</button>` : `<button class="add" style="width:100%;padding:13px" onclick="change(${p.id},1)">${t("add")}</button>`}</div></div></div></div>`;
+}
+function cart() {
+  const net = goods() - disc(), left = SHOP.free - net, pct = Math.min(100, net / SHOP.free * 100);
+  const cs = new Set(Object.keys(S.cart).map(id => P(id).cat));
+  const rec = PRODUCTS.filter(p => !S.cart[p.id]).sort((a, b) => (cs.has(b.cat) ? 1 : 0) - (cs.has(a.cat) ? 1 : 0) || b.n - a.n).slice(0, 4);
+  const cross = (net < SHOP.min ? `<p class="muted" style="color:var(--warn)">${t("minor")} ${fmt(SHOP.min)}</p>` : "") + (rec.length ? `<b>${t("also")}</b><div class="chips">${rec.map(p => `<button onclick="change(${p.id},1)">${p.e} ${esc(p[S.lang][0])} · ${fmt(p.price)} ＋</button>`).join("")}</div>` : "");
+  const items = Object.entries(S.cart).map(([id, q]) => { const p = P(id); return `<div class="item"><div class="e">${ico(p)}</div><div class="m"><b>${esc(p[S.lang][0])}</b><div class="muted">${fmt(p.price)}</div></div><div class="qty"><button onclick="change(${id},-1)">−</button><b>${q}</b><button onclick="change(${id},1)">+</button></div></div>`; }).join("");
+  if (!count()) return `<div class="pad"><button class="back" onclick="go('shop')">${t("back")}</button><h2>${t("cart")}</h2><p class="muted">${t("empty")}</p></div>`;
+  return `<div class="pad"><button class="back" onclick="go('shop')">${t("back")}</button><h2>${t("cart")}</h2>
+   <div class="prog">${left > 0 ? `${t("left")} <b>${fmt(left)}</b>` : `<b>${t("got")}</b>`}<div class="track"><i style="width:${pct}%"></i></div></div>${items}
+   ${cross}<div class="promo"><input id="pc" placeholder="${t("promo")}" value="${esc(S.code)}"><button onclick="applyPromo()">${t("apply")}</button></div>
+   <div class="sum"><span>${t("goods")}</span><span>${fmt(goods())}</span></div>${S.pct ? `<div class="sum" style="color:var(--brand)"><span>${t("disc")} (${S.pct}%)</span><span>−${fmt(disc())}</span></div>` : ""}</div>
+   <div class="bar up"><button class="cta" onclick="go('checkout')"><span>${t("checkout")}</span><span>${fmt(net)}</span></button></div>`;
+}
+function checkout() {
+  const d = Object.entries(DELIVERY).map(([k, v]) => `<button class="opt ${S.dl === k ? "on" : ""}" onclick="readForm();S.dl='${k}';render()">${v.e} ${v[S.lang]}<small>${v[S.lang === "uz" ? "tu" : "tr"]} · ${v.price && goods() - disc() < SHOP.free ? fmt(v.price) : "0"}</small></button>`).join("");
+  const y = Object.entries(PAYMENT).map(([k, v]) => `<button class="opt ${S.pay === k ? "on" : ""}" onclick="readForm();S.pay='${k}';render()">${v.e} ${v[S.lang]}</button>`).join("");
+  return `<div class="pad"><button class="back" onclick="go('cart')">${t("back")}</button><h2>${t("checkout")}</h2>
+   <input id="f_name" placeholder="${t("name")}" value="${esc(S.f.name)}" autocomplete="name"><input id="f_phone" type="tel" placeholder="${t("phone")}" value="${esc(S.f.phone)}" autocomplete="tel">
+   <textarea id="f_addr" rows="2" placeholder="${t("addr")}">${esc(S.f.addr)}</textarea><button class="opt ${S.loc ? "on" : ""}" onclick="getLoc()">📍 ${S.loc ? t("locok") : t("loc")}<small>${S.loc ? S.loc.lat.toFixed(5) + ", " + S.loc.lon.toFixed(5) : t("lochint")}</small></button><textarea id="f_cmt" rows="2" placeholder="${t("cmt")}">${esc(S.f.cmt)}</textarea>
+   <b>${t("dl")}</b><div class="opts">${d}</div><b>${t("py")}</b><div class="opts">${y}</div>
+   <div class="sum"><span>${t("goods")}</span><span>${fmt(goods() - disc())}</span></div><div class="sum"><span>${t("ship")}</span><span>${ship() ? fmt(ship()) : "0"}</span></div><div class="sum big"><span>${t("total")}</span><span>${fmt(grand())}</span></div>
+   <p class="muted">${t("demo")}</p></div><div class="bar"><button class="cta" onclick="submitOrder()"><span>${t("order")}</span><span>${fmt(grand())}</span></button></div>`;
+}
+function getLoc() {
+  readForm();
+  const ok = (la, lo) => { S.loc = { lat: la, lon: lo }; buzz(); toast(t("locok")); render(); };
+  const fail = () => toast(t("locerr"));
+  const web = () => navigator.geolocation ? navigator.geolocation.getCurrentPosition(p => ok(p.coords.latitude, p.coords.longitude), fail, { enableHighAccuracy: true, timeout: 10000 }) : fail();
+  const LM = tg && tg.LocationManager;
+  if (LM) LM.init(() => { if (!LM.isLocationAvailable) return web(); LM.getLocation(l => l ? ok(l.latitude, l.longitude) : web()); });
+  else web();
+}
+function submitOrder() {
+  readForm();
+  if (goods() - disc() < SHOP.min) { toast(t("minor") + " " + fmt(SHOP.min)); buzz("heavy"); return; }
+  if (!S.f.name.trim() || !S.f.phone.trim() || (S.dl !== "pickup" && !S.f.addr.trim() && !S.loc)) { toast(t("fill")); buzz("heavy"); return; }
+  const data = { lang: S.lang, name: S.f.name, phone: S.f.phone, addr: S.f.addr, comment: S.f.cmt, loc: S.loc, delivery: S.dl, payment: S.pay, promo: S.code, discount: Math.round(disc()),
+    items: Object.entries(S.cart).map(([id, q]) => ({ id: +id, name: P(id).uz[0], qty: q, price: P(id).price })), goods: goods(), shipping: ship(), total: Math.round(grand()) };
+  try { tg && tg.HapticFeedback.notificationOccurred("success"); } catch (e) {}
+  const msg = buildMsg(data);
+  if (SHOP.api) { // 2-variant: bepul Cloudflare Worker orqali avtomatik yuborish
+    fetch(SHOP.api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: msg, data }) })
+      .then(r => { if (!r.ok) throw 0; toast("✅ " + t("sent")); finish(data); })
+      .catch(() => toast(t("err")));
+    return;
+  }
+  // 1-variant (serversiz): egasining Telegram chati tayyor xabar bilan ochiladi
+  const url = "https://t.me/" + SHOP.tg + "?text=" + encodeURIComponent(msg);
+  if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, "_blank");
+  finish(data);
+}
+function buildMsg(d) {
+  const lines = d.items.map(i => "• " + i.name + " × " + i.qty + " = " + i.price * i.qty + " so'm").join("\n");
+  return "🛒 Yangi buyurtma\n\n👤 " + d.name + "\n📞 " + d.phone + "\n📍 " + (d.addr || "-") + (d.loc ? "\n🗺 https://maps.google.com/?q=" + d.loc.lat + "," + d.loc.lon : "") + "\n🚚 " + DELIVERY[d.delivery].uz + "\n💳 " + PAYMENT[d.payment].uz +
+    (d.comment ? "\n💬 " + d.comment : "") + "\n\n" + lines + (d.discount ? "\n🏷 Chegirma: -" + d.discount + " so'm" : "") + "\n🚚 Yetkazish: " + d.shipping + " so'm\n\n💰 Jami: " + d.total + " so'm";
+}
+const FAQ = [ /* do'kon egasi o'zgartiradi */
+ { uz: ["Buyurtma qanday beriladi?", "Mahsulotni savatga qo'shing, ma'lumotlarni kiriting va «Buyurtma berish» ni bosing. Operator siz bilan bog'lanadi."], ru: ["Как сделать заказ?", "Добавьте товар в корзину, заполните данные и нажмите «Оформить заказ». Оператор свяжется с вами."] },
+ { uz: ["Mahsulot sertifikati bormi?", "Sertifikat va ruxsatnoma ma'lumotlari so'rov bo'yicha taqdim etiladi."], ru: ["Есть ли сертификаты?", "Информация о сертификатах и разрешениях предоставляется по запросу."] },
+ { uz: ["Bu dorining o'rnini bosadimi?", "Yo'q. Mahsulotlar dori vositasi emas, tabiiy qo'shimchalardir. Kasallik bo'lsa shifokorga murojaat qiling."], ru: ["Заменяет ли это лекарства?", "Нет. Товары не являются лекарственными средствами. При заболевании обратитесь к врачу."] },
+ { uz: ["Yetkazish qancha vaqt oladi?", "Kuryer 1–2 kun, pochta 3–5 kun. Muddat hududga qarab o'zgarishi mumkin."], ru: ["Сколько занимает доставка?", "Курьер 1–2 дня, почта 3–5 дней. Срок может меняться в зависимости от региона."] }
+];
+const nm = id => (P(id) ? P(id)[S.lang][0] : "?");
+function openD(id) { S.detail = id; S.recent = [id, ...S.recent.filter(x => x !== id)].slice(0, 6); store.set("recent", S.recent); render(); }
+function applyTop() { const c = Object.keys(SHOP.promo)[0]; S.code = c; S.pct = SHOP.promo[c]; toast(t("okp")); buzz("medium"); render(); }
+function shareP(id) { const u = "https://t.me/share/url?url=" + encodeURIComponent(SHOP.link) + "&text=" + encodeURIComponent(nm(id) + " — " + fmt(P(id).price)); if (tg && tg.openTelegramLink) tg.openTelegramLink(u); else window.open(u, "_blank"); }
+function finish(d) {
+  S.hist.unshift({ id: Date.now(), ts: new Date().toLocaleString(S.lang === "ru" ? "ru-RU" : "uz-UZ"), items: d.items.map(i => ({ id: i.id, qty: i.qty })), total: d.total });
+  S.hist = S.hist.slice(0, 20); S.cart = {}; S.code = ""; S.pct = 0; S.view = "orders"; save(); render(); scrollTo(0, 0);
+}
+function repeat(id) { const o = S.hist.find(x => x.id === id); if (!o) return; S.cart = {}; o.items.forEach(i => { if (P(i.id)) S.cart[i.id] = i.qty; }); save(); buzz(); go("cart"); }
+function orders() {
+  if (!S.hist.length) return `<div class="pad"><h2>${t("torders")}</h2><p class="muted">${t("noord")}</p></div>`;
+  return `<div class="pad"><h2>${t("torders")}</h2>${S.hist.map(o => `<div class="item" style="flex-direction:column;align-items:stretch"><div class="sum"><b>#${String(o.id).slice(-5)}</b><span class="muted">${esc(o.ts)}</span></div><div class="muted">${o.items.map(i => esc(nm(i.id)) + " ×" + i.qty).join(", ")}</div><div class="sum"><b>${fmt(o.total)}</b><button class="opt" style="width:auto;padding:8px 12px" onclick="repeat(${o.id})">🔁 ${t("again")}</button></div></div>`).join("")}</div>`;
+}
+function info() {
+  const box = (h, body) => `<div class="item" style="flex-direction:column;align-items:stretch;gap:4px"><b>${h}</b>${body}</div>`;
+  const tm = S.lang === "uz" ? "tu" : "tr";
+  return `<div class="pad"><h2>${t("tinfo")}</h2>
+   ${box("🕘 " + t("hours"), `<span class="muted">${esc(SHOP.hours)}</span>`)}
+   ${box("🚚 " + t("ship"), Object.values(DELIVERY).map(v => `<span class="muted">${v.e} ${v[S.lang]}: ${v[tm]} · ${v.price ? fmt(v.price) : "0"}</span>`).join("") + `<span class="muted">${t("free")}</span>`)}
+   ${box("💳 " + t("py"), `<span class="muted">${Object.values(PAYMENT).map(v => v[S.lang]).join(", ")}</span>`)}
+   <b>${t("faq")}</b>${FAQ.map(f => `<details><summary>${esc(f[S.lang][0])}</summary><p>${esc(f[S.lang][1])}</p></details>`).join("")}
+   <div class="contact"><a href="https://t.me/${SHOP.tg}">💬 ${t("write")}</a><a href="tel:${SHOP.phone}">📞 ${t("call")}</a></div><p class="muted">${t("note")}</p></div>`;
+}
+function tabs() {
+  const items = [["shop", "🏠", t("tshop")], ["cart", "🛒", t("cart")], ["orders", "📋", t("torders")], ["info", "ℹ️", t("tinfo")]];
+  return `<nav class="tabs">${items.map(([k, e, l]) => `<button class="${S.view === k ? "on" : ""}" onclick="go('${k}')"><span>${e}</span>${l}${k === "cart" && count() ? `<i>${count()}</i>` : ""}</button>`).join("")}</nav>`;
+}
+function render() {
+  const v = S.view;
+  $.innerHTML = (v === "shop" ? shop() : v === "cart" ? cart() : v === "orders" ? orders() : v === "info" ? info() : checkout()) + (S.detail ? sheet() : "") + (v !== "checkout" ? tabs() : "");
+}
+let LOADING = false;
+const CAT_ALL = { id: "all", e: "✨", uz: "Hammasi", ru: "Все" };
+const ico = p => p.img ? `<img class="pi" loading="lazy" alt="" src="${esc(p.img)}" onerror="this.remove()">` : p.e;
+function parseCSV(x) { const r = []; let row = [], f = "", q = false; for (let i = 0; i < x.length; i++) { const c = x[i]; if (q) { if (c === '"') { if (x[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; } else if (c === '"') q = true; else if (c === ",") { row.push(f); f = ""; } else if (c === "\n") { row.push(f); r.push(row); row = []; f = ""; } else if (c !== "\r") f += c; } if (f !== "" || row.length) { row.push(f); r.push(row); } return r; }
+function fromSheet(rows) {
+  const h = rows[0].map(x => x.trim().toLowerCase()), out = [], cats = new Map(), num = v => parseInt(String(v || "").replace(/\D/g, "")) || 0;
+  rows.slice(1).forEach(r => {
+    const o = {}; h.forEach((k, i) => o[k] = (r[i] || "").trim());
+    const id = parseInt(o.id), st = (o.holat || "bor").toLowerCase();
+    if (!id || !o.nom_uz || st.startsWith("yash")) return;
+    const price = num(o.narx), old = num(o.eski_narx), cid = "c_" + (o.kategoriya_uz || "boshqa").toLowerCase();
+    cats.set(cid, { id: cid, e: "", uz: o.kategoriya_uz || "Boshqa", ru: o.kategoriya_ru || o.kategoriya_uz || "Другое" });
+    out.push({ id, cat: cid, e: o.emoji || "🌿", img: o.rasm, price, old: old > price ? old : 0, badge: o.belgi, out: st.startsWith("tug"), r: parseFloat(o.reyting) || 0, n: num(o.sharhlar),
+      uz: [o.nom_uz, o.tavsif_uz, o.tarkib_uz, o.qollash_uz], ru: [o.nom_ru || o.nom_uz, o.tavsif_ru || o.tavsif_uz, o.tarkib_ru || o.tarkib_uz, o.qollash_ru || o.qollash_uz] });
+  });
+  return { products: out, cats: [CAT_ALL, ...cats.values()] };
+}
+function applyCatalog(c) {
+  PRODUCTS = c.products; CATS = c.cats;
+  Object.keys(S.cart).forEach(id => { const p = P(id); if (!p || p.out) delete S.cart[id]; });
+  S.recent = S.recent.filter(id => P(id)); S.fav = S.fav.filter(id => P(id));
+  if (!CATS.some(x => x.id === S.cat)) S.cat = "all";
+  save();
+}
+async function loadCatalog() {
+  if (!SHOP.sheet) { render(); return; }
+  const cached = store.get("catalog", null);
+  if (cached) applyCatalog(cached); else { PRODUCTS = []; CATS = [CAT_ALL]; LOADING = true; S.cart = {}; }
+  render();
+  try {
+    const r = await fetch(SHOP.sheet + (SHOP.sheet.includes("?") ? "&" : "?") + "_=" + Date.now());
+    if (!r.ok) throw 0;
+    const c = fromSheet(parseCSV(await r.text()));
+    if (c.products.length) { store.set("catalog", c); applyCatalog(c); }
+  } catch (e) { if (!cached) toast(t("err")); }
+  LOADING = false; render();
+}
+loadCatalog();
+</script>
+</body>
+</html>
